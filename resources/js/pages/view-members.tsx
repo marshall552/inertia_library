@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import Sidebar from '@/components/lib-ui/sidebar';
+import DataTable from '@/components/lib-ui/data-table';
 import { Pencil, Trash2 } from 'lucide-react';
 import EditModal from '@/components/lib-ui/edit-modal';
 import ConfirmationModal from '@/components/lib-ui/confirmation-modal';
 import DeleteModal from '@/components/lib-ui/delete-modal';
 import UpdateModal from '@/components/lib-ui/update-modal';
-import DataTable from '@/components/lib-ui/data-table';
 import { FormField } from '@/components/lib-ui/edit-modal';
 
-export default function ViewBooks() {
+export default function ViewMembers() {
+    // Add state management for modals
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [isDeleteSuccessOpen, setIsDeleteSuccessOpen] = useState(false);
     const [isUpdateSuccessOpen, setIsUpdateSuccessOpen] = useState(false);
-    
+
     const columns = [
-        { key: 'title', header: 'Title' },
-        { key: 'author', header: 'Author' },
-        { key: 'isbn', header: 'ISBN' },
-        { key: 'genre', header: 'Genre' },
-        { key: 'publicationDate', header: 'Publication Date' },
-        { key: 'copies', header: 'No. of Copy' },
+        { key: 'name', header: 'Name' },
+        { key: 'email', header: 'Email' },
+        { key: 'contactNumber', header: 'Contact Number' },
+        { key: 'role', header: 'Role' },
     ];
 
     const actions = [
@@ -30,71 +29,57 @@ export default function ViewBooks() {
             label: 'Edit',
             color: 'text-blue-500',
             hoverColor: 'bg-blue-50',
-            onClick: () => setIsEditModalOpen(true),
+            onClick: () => setIsEditModalOpen(true), // Update to use state
         },
         {
             icon: Trash2,
             label: 'Delete',
             color: 'text-red-500',
             hoverColor: 'bg-red-50',
-            onClick: () => setIsConfirmationModalOpen(true),
+            onClick: () => setIsConfirmationModalOpen(true), // Update to use state
         },
     ];
 
-    const sampleData = [
+    const memberData = [
         {
-            title: 'Don Quixote',
-            author: 'Miguel de Cervantes',
-            isbn: '0070932',
-            genre: 'Modern Novel',
-            publicationDate: '2024-02-20',
-            copies: 100,
+            name: 'John Doe',
+            email: 'john@example.com',
+            contactNumber: '123-456-7890',
+            role: 'Student',
         },
-        // Add more sample data as needed
+        // Add more member data as needed
     ];
 
-    const bookFields: FormField[] = [
+    const memberFields: FormField[] = [
         {
-            name: 'title',
-            label: 'Title',
+            name: 'name',
+            label: 'Name',
             type: 'text',
-            placeholder: 'e.g. Don Quixote'
+            placeholder: 'e.g. John Doe'
         },
         {
-            name: 'author',
-            label: 'Author',
-            type: 'text',
-            placeholder: 'e.g. Miguel de Cervantes'
+            name: 'email',
+            label: 'Email',
+            type: 'email',
+            placeholder: 'e.g. john@example.com'
         },
         {
-            name: 'isbn',
-            label: 'ISBN',
-            type: 'text',
-            placeholder: 'e.g. 0875328'
+            name: 'contactNumber',
+            label: 'Contact Number',
+            type: 'tel',
+            placeholder: 'e.g. 123-456-7890'
         },
         {
-            name: 'genre',
-            label: 'Genre',
-            type: 'text',
-            placeholder: 'e.g. Modern Novel'
-        },
-        {
-            name: 'publicationDate',
-            label: 'Publication Date',
-            type: 'date'
-        },
-        {
-            name: 'numberOfCopies',
-            label: 'No. of Copy',
-            type: 'number',
-            placeholder: 'e.g. 100',
-            min: 0
+            name: 'role',
+            label: 'Role',
+            type: 'select',
+            options: ['Student', 'Teacher', 'Staff']
         }
     ];
 
     return (
         <div className="min-h-screen flex bg-[#F5F5F5]">    
-            <Head title="View Books">
+            <Head title="View Members">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
                 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
@@ -106,20 +91,20 @@ export default function ViewBooks() {
             
             <div className="flex-1 ml-64">
                 <div className="p-8">
-                    <h1 className="text-2xl font-semibold text-gray-700 font[Lato]">Book Management</h1>
-                    <p className="text-sm text-gray-500">Book List</p>
+                    <h1 className="text-2xl font-semibold text-gray-700 font[Lato]">Member Management</h1>
+                    <p className="text-sm text-gray-500">Member List</p>
 
                     <div className="mt-6">
                         <DataTable
                             columns={columns}
-                            data={sampleData}
+                            data={memberData}
                             actions={actions}
                         />
                     </div>
                 </div>
             </div>
 
-            {/* Modals */}
+            {/* Add Modals */}
             <EditModal 
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
@@ -128,8 +113,8 @@ export default function ViewBooks() {
                     setIsEditModalOpen(false);
                     setIsUpdateSuccessOpen(true);
                 }}
-                title="Edit Book"
-                fields={bookFields}
+                title="Edit Member"
+                fields={memberFields}
             />
             <ConfirmationModal
                 isOpen={isConfirmationModalOpen}

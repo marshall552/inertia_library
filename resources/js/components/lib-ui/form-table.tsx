@@ -35,11 +35,11 @@ const FormTable: React.FC<FormTableProps> = ({ fields, onSubmit }) => {
                 {field.type === 'select' ? (
                     <select
                         name={field.name}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-400 appearance-none"
                     >
-                        <option value="">{field.placeholder}</option>
+                        <option value="" className="text-gray-400">{field.placeholder}</option>
                         {field.options?.map((option) => (
-                            <option key={option} value={option}>
+                            <option key={option} value={option} className="text-gray-700">
                                 {option}
                             </option>
                         ))}
@@ -49,11 +49,18 @@ const FormTable: React.FC<FormTableProps> = ({ fields, onSubmit }) => {
                         type={field.type}
                         name={field.name}
                         placeholder={field.placeholder}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700 placeholder:text-gray-400"
                     />
                 )}
                 {field.type === 'date' && (
-                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                )}
+                {field.type === 'select' && (
+                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
                 )}
             </div>
         </div>

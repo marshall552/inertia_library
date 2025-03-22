@@ -27,11 +27,9 @@ Route::get('issue-return', function () {
     return Inertia::render('issue-return');
 })->name('issue-return');
 
-
-
-
-
-
+Route::get('view-issue-return', function () {
+    return Inertia::render('view-issue-return');
+})->name('view-issue-return');
 
 
 

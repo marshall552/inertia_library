@@ -52,7 +52,7 @@ export default function Members() {
             </div>
             <div className="flex-1 ml-64">
                 <div className="p-8">
-                    <h1 className="text-2xl font-semibold font-lato text-gray-700">MEMBER MANAGEMENT</h1>
+                    <h1 className="text-2xl font-semibold font-lato text-gray-700">Member Management</h1>
                     <p className="text-sm text-[#8C8F94] mb-9">Member Form</p>
                     <FormTable 
                         fields={memberFields}

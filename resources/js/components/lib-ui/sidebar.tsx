@@ -75,7 +75,7 @@ const Sidebar: React.FC = () => {
               </Link>
               {openMembers && (
                 <ul className="ml-7 mt-2 space-y-1">
-                  <Link href="/members">
+                  <Link href="/view-members">
                     <li className="p-2 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#383b40] hover:translate-x-2 hover:text-[#D1D5DB]">
                       View Members
                     </li>

@@ -2,37 +2,46 @@ import React from 'react';
 import { X, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+export interface FormField {
+    name: string;
+    label: string;
+    type: 'text' | 'email' | 'number' | 'date' | 'tel' | 'select';
+    placeholder?: string;
+    options?: string[];
+    min?: number;
+    validation?: {
+        required?: boolean;
+        pattern?: RegExp;
+        minLength?: number;
+        maxLength?: number;
+    };
+}
+
 interface EditModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (data: BookData) => void;
-}
-
-interface BookData {
+    onSave: (data: Record<string, any>) => void;
     title: string;
-    author: string;
-    isbn: string;
-    genre: string;
-    publicationDate: string;
-    numberOfCopies: string;
+    fields: FormField[];
 }
 
-const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave }) => {
-    const [formData, setFormData] = React.useState<BookData>({
-        title: '',
-        author: '',
-        isbn: '',
-        genre: '',
-        publicationDate: '',
-        numberOfCopies: ''
-    });
+const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, title, fields }) => {
+    // Create initial form data based on fields
+    const initialFormData = React.useMemo(() => {
+        return fields.reduce((acc, field) => ({
+            ...acc,
+            [field.name]: ''
+        }), {});
+    }, [fields]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+    const [formData, setFormData] = React.useState<Record<string, any>>(initialFormData);
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        
         setFormData((prev) => ({
             ...prev,
-            [name]: name === "numberOfCopies" ? Math.max(0, Number(value)).toString() : value
+            [name]: type === "number" ? Math.max(0, Number(value)).toString() : value
         }));
     };
 
@@ -42,14 +51,55 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave }) => {
     };
 
     const handleClear = () => {
-        setFormData({
-            title: '',
-            author: '',
-            isbn: '',
-            genre: '',
-            publicationDate: '',
-            numberOfCopies: ''
-        });
+        setFormData(initialFormData);
+    };
+
+    const renderField = (field: FormField) => {
+        const commonClasses = "w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700";
+
+        switch (field.type) {
+            case 'select':
+                return (
+                    <select
+                        name={field.name}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        className={commonClasses}
+                    >
+                        <option value="">{field.placeholder}</option>
+                        {field.options?.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                );
+            case 'date':
+                return (
+                    <div className="relative">
+                        <input
+                            type="date"
+                            name={field.name}
+                            value={formData[field.name]}
+                            onChange={handleChange}
+                            className={commonClasses}
+                        />
+                        <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    </div>
+                );
+            default:
+                return (
+                    <input
+                        type={field.type}
+                        name={field.name}
+                        value={formData[field.name]}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        min={field.min}
+                        className={commonClasses}
+                    />
+                );
+        }
     };
 
     return (
@@ -80,6 +130,9 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave }) => {
                                 damping: 25
                             }}
                         >
+                            {/* Title */}
+                            <h2 className="text-xl font-semibold text-gray-700 mb-4">{title}</h2>
+
                             {/* Close Button */}
                             <motion.button
                                 onClick={onClose}
@@ -91,87 +144,14 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave }) => {
                             </motion.button>
 
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                {/* Title */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Title</label>
-                                    <input
-                                        type="text"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Don Quixote"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                    />
-                                </div>
-
-                                {/* Author */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Author</label>
-                                    <input
-                                        type="text"
-                                        name="author"
-                                        value={formData.author}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Miguel de Cervantes"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                    />
-                                </div>
-
-                                {/* ISBN */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">ISBN</label>
-                                    <input
-                                        type="text"
-                                        name="isbn"
-                                        value={formData.isbn}
-                                        onChange={handleChange}
-                                        placeholder="e.g. 0875328"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                    />
-                                </div>
-
-                                {/* Genre */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Genre</label>
-                                    <input
-                                        type="text"
-                                        name="genre"
-                                        value={formData.genre}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Modern Novel"
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                    />
-                                </div>
-
-                                {/* Publication Date */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">Publication Date</label>
-                                    <div className="relative">
-                                        <input
-                                            type="date"
-                                            name="publicationDate"
-                                            value={formData.publicationDate}
-                                            onChange={handleChange}
-                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                        />
-                                        <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-
+                                {fields.map((field) => (
+                                    <div key={field.name}>
+                                        <label className="block text-sm text-gray-600 mb-1">
+                                            {field.label}
+                                        </label>
+                                        {renderField(field)}
                                     </div>
-                                </div>
-
-                                {/* Number of Copies */}
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-1">No. of Copy</label>
-                                    <input
-                                        type="number"
-                                        name="numberOfCopies"
-                                        value={formData.numberOfCopies}
-                                        onChange={handleChange}
-                                        placeholder="e.g. 100"
-                                        min={0}
-                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700"
-                                    />
-                                </div>
+                                ))}
 
                                 {/* Buttons */}
                                 <div className="flex justify-end gap-3 pt-4">

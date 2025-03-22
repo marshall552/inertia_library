@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Head } from '@inertiajs/react';
 import Sidebar from '@/components/lib-ui/sidebar';
