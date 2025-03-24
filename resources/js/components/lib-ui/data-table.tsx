@@ -5,6 +5,7 @@ export interface TableColumn {
     key: string;
     header: string;
     width?: string;
+    render?: (value: any) => React.ReactNode;
 }
 
 export interface TableAction {
@@ -13,6 +14,7 @@ export interface TableAction {
     onClick: (item: any) => void;
     color: string;
     hoverColor: string;
+    render?: (item: any) => React.ReactNode;
 }
 
 interface DataTableProps {
@@ -56,21 +58,27 @@ const DataTable: React.FC<DataTableProps> = ({
                             <tr key={rowIndex} className="border-b border-gray-100 text-gray-700">
                                 {columns.map((column) => (
                                     <td key={column.key} className="px-4 py-3">
-                                        {item[column.key]}
+                                        {column.render ? column.render(item[column.key]) : item[column.key]}
                                     </td>
                                 ))}
                                 {actions && actions.length > 0 && (
                                     <td className="px-4 py-3">
                                         <div className="flex justify-center gap-2">
                                             {actions.map((action, actionIndex) => (
-                                                <button
-                                                    key={actionIndex}
-                                                    className={`p-1 rounded-lg hover:${action.hoverColor}`}
-                                                    onClick={() => action.onClick(item)}
-                                                    title={action.label}
-                                                >
-                                                    <action.icon className={`w-5 h-5 ${action.color}`} />
-                                                </button>
+                                                action.render ? (
+                                                    <div key={actionIndex}>
+                                                        {action.render(item)}
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        key={actionIndex}
+                                                        className={`p-1 rounded-lg hover:${action.hoverColor}`}
+                                                        onClick={() => action.onClick(item)}
+                                                        title={action.label}
+                                                    >
+                                                        <action.icon className={`w-5 h-5 ${action.color}`} />
+                                                    </button>
+                                                )
                                             ))}
                                         </div>
                                     </td>

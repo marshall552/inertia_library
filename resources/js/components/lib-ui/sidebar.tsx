@@ -103,7 +103,7 @@ const Sidebar: React.FC = () => {
               </Link>
               {openIssue && (
                 <ul className="ml-7 mt-2 space-y-1">
-                  <Link href="/issue-return">
+                  <Link href="/view-issue-return">
                     <li className="p-2 rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#383b40] hover:translate-x-2 hover:text-[#D1D5DB]">
                       View Issue/Returned Books
                     </li>

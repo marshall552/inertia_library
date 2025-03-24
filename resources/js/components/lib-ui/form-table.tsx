@@ -35,11 +35,11 @@ const FormTable: React.FC<FormTableProps> = ({ fields, onSubmit }) => {
                 {field.type === 'select' ? (
                     <select
                         name={field.name}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-400 appearance-none"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00ADB5]/20 focus:border-[#00ADB5] text-gray-700 appearance-none [&>option[value='']]:text-gray-400"
                     >
                         <option value="" className="text-gray-400">{field.placeholder}</option>
                         {field.options?.map((option) => (
-                            <option key={option} value={option} className="text-gray-700">
+                            <option key={option} value={option}>
                                 {option}
                             </option>
                         ))}
