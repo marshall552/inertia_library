@@ -11,14 +11,14 @@ export default function IssueReturn() {
         leftColumn: [
             {
                 label: 'Select User',
-                name: 'user',
+                name: 'member_id',
                 type: 'select',
                 placeholder: '-- select a user',
                 options: ['User 1', 'User 2', 'User 3'] // Replace with actual user data
             },
             {
                 label: 'Select Book',
-                name: 'book',
+                name: 'book_id',
                 type: 'select',
                 placeholder: '-- select a book',
                 options: ['Book 1', 'Book 2', 'Book 3'] // Replace with actual book data
@@ -27,13 +27,13 @@ export default function IssueReturn() {
         rightColumn: [
             {
                 label: 'Issue Date',
-                name: 'issueDate',
+                name: 'issue_date',
                 type: 'date',
                 placeholder: 'dd/mm/yyyy'
             },
             {
-                label: 'Due Date',
-                name: 'dueDate',
+                label: 'Return Date',
+                name: 'return_date',
                 type: 'date',
                 placeholder: 'dd/mm/yyyy'
             }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, usePage, PageProps } from '@inertiajs/react';
 import Sidebar from '@/components/lib-ui/sidebar';
 import { Pencil, Trash2 } from 'lucide-react';
 import EditModal from '@/components/lib-ui/edit-modal';
@@ -9,19 +9,36 @@ import UpdateModal from '@/components/lib-ui/update-modal';
 import DataTable from '@/components/lib-ui/data-table';
 import { FormField } from '@/components/lib-ui/edit-modal';
 
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    isbn: string;
+    genre: string;
+    publication_date: string;
+    no_of_copies: number;
+}
+
+type Props = {
+    books: Book[];
+};
+
 export default function ViewBooks() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [isDeleteSuccessOpen, setIsDeleteSuccessOpen] = useState(false);
     const [isUpdateSuccessOpen, setIsUpdateSuccessOpen] = useState(false);
     
+    const props = usePage<PageProps<Props>>().props;
+    const books = props.books || [];
+
     const columns = [
         { key: 'title', header: 'Title' },
         { key: 'author', header: 'Author' },
         { key: 'isbn', header: 'ISBN' },
         { key: 'genre', header: 'Genre' },
-        { key: 'publicationDate', header: 'Publication Date' },
-        { key: 'copies', header: 'No. of Copy' },
+        { key: 'publication_date', header: 'Publication Date' },
+        { key: 'no_of_copies', header: 'No. of Copy' },
     ];
 
     const actions = [
@@ -39,18 +56,6 @@ export default function ViewBooks() {
             hoverColor: 'bg-red-50',
             onClick: () => setIsConfirmationModalOpen(true),
         },
-    ];
-
-    const sampleData = [
-        {
-            title: 'Don Quixote',
-            author: 'Miguel de Cervantes',
-            isbn: '0070932',
-            genre: 'Modern Novel',
-            publicationDate: '2024-02-20',
-            copies: 100,
-        },
-        // Add more sample data as needed
     ];
 
     const bookFields: FormField[] = [
@@ -79,12 +84,12 @@ export default function ViewBooks() {
             placeholder: 'e.g. Modern Novel'
         },
         {
-            name: 'publicationDate',
+            name: 'publication_date',
             label: 'Publication Date',
             type: 'date'
         },
         {
-            name: 'numberOfCopies',
+            name: 'no_of_copies',
             label: 'No. of Copy',
             type: 'number',
             placeholder: 'e.g. 100',
@@ -112,9 +117,14 @@ export default function ViewBooks() {
                     <div className="mt-6">
                         <DataTable
                             columns={columns}
-                            data={sampleData}
+                            data={books}
                             actions={actions}
                         />
+                        {books.length === 0 && (
+                            <div className="text-center py-4 text-gray-500">
+                                No books available
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
